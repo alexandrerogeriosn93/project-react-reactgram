@@ -48,13 +48,11 @@ const deletePhoto = async (req, res) => {
     const completeFile = `/uploads/photos/${photo.image}`;
     await fs.unlink(`./${completeFile}`, (err) => {
       if (err) {
-        res
-          .status(422)
-          .json({
-            errors: [
-              "Ocorreu um erro ao tentar deletar os arquivos da foto, tente novamente mais tarde.",
-            ],
-          });
+        res.status(422).json({
+          errors: [
+            "Ocorreu um erro ao tentar deletar os arquivos da foto, tente novamente mais tarde.",
+          ],
+        });
         return;
       }
     });
@@ -70,7 +68,16 @@ const deletePhoto = async (req, res) => {
   }
 };
 
+const getAllPhotos = async (req, res) => {
+  const photos = await Photo.find({})
+    .sort([["createdAt", -1]])
+    .exec();
+
+  return res.status(200).json(photos);
+};
+
 module.exports = {
   insertPhoto,
   deletePhoto,
+  getAllPhotos,
 };
