@@ -1,6 +1,7 @@
 const Photo = require("../models/Photo");
 const User = require("../models/User");
 const mongoose = require("mongoose");
+const fs = require("fs");
 
 const insertPhoto = async (req, res) => {
   const { title } = req.body;
@@ -43,6 +44,20 @@ const deletePhoto = async (req, res) => {
         .json({ errors: ["Ocorreu um erro, por favor tente mais tarde."] });
       return;
     }
+
+    const completeFile = `/uploads/photos/${photo.image}`;
+    await fs.unlink(`./${completeFile}`, (err) => {
+      if (err) {
+        res
+          .status(422)
+          .json({
+            errors: [
+              "Ocorreu um erro ao tentar deletar os arquivos da foto, tente novamente mais tarde.",
+            ],
+          });
+        return;
+      }
+    });
 
     await Photo.findByIdAndDelete(photo._id);
 
