@@ -20,6 +20,12 @@ const EditProfile = () => {
     e.preventDefault();
   };
 
+  const handleFile = (e) => {
+    const image = e.target.files[0];
+    setPreviewImage(image);
+    setProfileImage(image);
+  };
+
   useEffect(() => {
     dispatch(profile());
   }, [dispatch]);
@@ -38,6 +44,17 @@ const EditProfile = () => {
       <p className="subtitle">
         Adicione uma imagem de perfil e conte mais sobre você
       </p>
+      {(user.profileImage || previewImage) && (
+        <img
+          src={
+            previewImage
+              ? URL.createObjectURL(previewImage)
+              : `${uploads}/users/${user.profileImage}`
+          }
+          alt={user.name}
+          className="profile-image"
+        />
+      )}
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -48,11 +65,7 @@ const EditProfile = () => {
         <input type="email" placeholder="E-mail" value={email || ""} disabled />
         <label>
           <span>Image do perfil:</span>
-          <input
-            type="file"
-            onChange={(e) => setProfileImage(e.target.value)}
-            value={profileImage || ""}
-          />
+          <input type="file" onChange={handleFile} />
         </label>
         <label>
           <span>Bio:</span>
