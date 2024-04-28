@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 
 import Message from "../../components/Message/Message";
 import {
+  deletePhoto,
   getUserPhotos,
   publishPhoto,
   resetMessage,
@@ -29,6 +30,12 @@ const Profile = () => {
   const newPhotoForm = useRef();
   const editPhotoForm = useRef();
 
+  const resetComponentMessage = () => {
+    setTimeout(() => {
+      dispatch(resetMessage());
+    }, 2000);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -48,14 +55,17 @@ const Profile = () => {
 
     setTitle("");
 
-    setTimeout(() => {
-      dispatch(resetMessage());
-    }, 2000);
+    resetComponentMessage();
   };
 
   const handleFile = (e) => {
     const image = e.target.files[0];
     setImage(image);
+  };
+
+  const handleDelete = (id) => {
+    dispatch(deletePhoto(id));
+    resetComponentMessage();
   };
 
   useEffect(() => {
@@ -124,7 +134,7 @@ const Profile = () => {
                       <BsFillEyeFill />
                     </Link>
                     <BsPencilFill />
-                    <BsXLg />
+                    <BsXLg onClick={() => handleDelete(photo._id)} />
                   </div>
                 ) : (
                   <Link className="btn" to={`photos/${photo._id}`}>

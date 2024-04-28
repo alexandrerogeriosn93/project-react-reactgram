@@ -46,7 +46,7 @@ export const photoSlice = createSlice({
         state.loading = false;
         state.success = true;
         state.error = null;
-        state.photo = action.payload;
+        state.photos = action.payload;
       })
       .addCase(deletePhoto.pending, (state) => {
         state.loading = true;
@@ -84,7 +84,7 @@ export const publishPhoto = createAsyncThunk(
 );
 
 export const getUserPhotos = createAsyncThunk(
-  "photo/userPhotos",
+  "photo/userphotos",
   async (id, thunkAPI) => {
     const token = thunkAPI.getState().auth.user.token;
     const data = await photoService.getUserPhotos(id, token);
