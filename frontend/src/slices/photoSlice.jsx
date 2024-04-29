@@ -156,11 +156,15 @@ export const updatePhoto = createAsyncThunk(
   },
 );
 
-export const getPhoto = createAsyncThunk("photo/getphoto", async (id) => {
-  const data = await photoService.getPhoto(id);
+export const getPhoto = createAsyncThunk(
+  "photo/getphoto",
+  async (id, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
+    const data = await photoService.getPhoto(id, token);
 
-  return data;
-});
+    return data;
+  },
+);
 
 export const { resetMessage } = photoSlice.actions;
 export default photoSlice.reducer;
