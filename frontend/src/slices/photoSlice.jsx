@@ -117,6 +117,17 @@ export const photoSlice = createSlice({
       .addCase(like.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(comment.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.error = null;
+        state.photo.comments.push(action.payload.comment);
+        state.message = action.payload.message;
+      })
+      .addCase(comment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
@@ -197,6 +208,24 @@ export const like = createAsyncThunk("photo/like", async (id, thunkAPI) => {
 
   return data;
 });
+
+export const comment = createAsyncThunk(
+  "photo/comment",
+  async (photoData, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token;
+    const data = await photoService.comment(
+      photoData.id,
+      { comment: photoData.comment },
+      token,
+    );
+
+    if (DataTransfer.errors) {
+      return thunkAPI.rejectWithValue(data.errors[0]);
+    }
+
+    return data;
+  },
+);
 
 export const { resetMessage } = photoSlice.actions;
 export default photoSlice.reducer;
