@@ -98,8 +98,8 @@ const comment = async (id, data, token) => {
   }
 };
 
-const getPhotos = async () => {
-  const config = requestConfig("GET");
+const getPhotos = async (token) => {
+  const config = requestConfig("GET", null, token);
 
   try {
     const res = await fetch(`${api}/photos`, config)
